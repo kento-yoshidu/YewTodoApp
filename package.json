@@ -1,0 +1,13 @@
+{
+  "name": "CITest",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kento-yoshidu/CITest.git",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "26.1.0"
+  }
+}
