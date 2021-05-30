@@ -1,13 +1,21 @@
 {
-  "name": "CITest",
+  "name": "my-gatsby-site",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/kento-yoshidu/CITest.git",
-  "license": "MIT",
+  "private": true,
+  "description": "My Gatsby Site",
+  "keywords": [
+    "gatsby"
+  ],
   "scripts": {
-    "test": "jest"
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
   },
-  "devDependencies": {
-    "jest": "26.1.0"
+  "dependencies": {
+    "gatsby": "^3.4.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   }
 }
