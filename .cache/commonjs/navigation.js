@@ -37,18 +37,33 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 function maybeRedirect(pathname) {
   const redirect = (0, _redirectUtils.maybeGetBrowserRedirect)(pathname);
+  const {
+    hash,
+    search
+  } = window.location;
 
   if (redirect != null) {
-    window.___replace(redirect.toPath);
+    window.___replace(redirect.toPath + search + hash);
 
     return true;
   } else {
     return false;
   }
-}
+} // Catch unhandled chunk loading errors and force a restart of the app.
+
+
+let nextRoute = ``;
+window.addEventListener(`unhandledrejection`, event => {
+  if (/loading chunk \d* failed./i.test(event.reason)) {
+    if (nextRoute) {
+      window.location.pathname = nextRoute;
+    }
+  }
+});
 
 const onPreRouteUpdate = (location, prevLocation) => {
   if (!maybeRedirect(location.pathname)) {
+    nextRoute = location.pathname;
     (0, _apiRunnerBrowser.apiRunner)(`onPreRouteUpdate`, {
       location,
       prevLocation
@@ -82,21 +97,22 @@ const navigate = (to, options = {}) => {
     return;
   }
 
-  let {
-    pathname
+  const {
+    pathname,
+    search,
+    hash
   } = (0, _gatsbyLink.parsePath)(to);
   const redirect = (0, _redirectUtils.maybeGetBrowserRedirect)(pathname); // If we're redirecting, just replace the passed in pathname
   // to the one we want to redirect to.
 
   if (redirect) {
-    to = redirect.toPath;
-    pathname = (0, _gatsbyLink.parsePath)(to).pathname;
+    to = redirect.toPath + search + hash;
   } // If we had a service worker update, no matter the path, reload window and
   // reset the pathname whitelist
 
 
   if (window.___swUpdated) {
-    window.location = pathname;
+    window.location = pathname + search + hash;
     return;
   } // Start a timer to wait for a second before transitioning and showing a
   // loader in case resources aren't around yet.
@@ -112,7 +128,7 @@ const navigate = (to, options = {}) => {
     });
   }, 1000);
 
-  _loader.default.loadPage(pathname).then(pageResources => {
+  _loader.default.loadPage(pathname + search).then(pageResources => {
     // If no page resources, then refresh the page
     // Do this, rather than simply `window.location.reload()`, so that
     // pressing the back/forward buttons work - otherwise when pressing
@@ -137,7 +153,7 @@ const navigate = (to, options = {}) => {
           });
         }
 
-        window.location = pathname;
+        window.location = pathname + search + hash;
       }
     }
 
@@ -203,10 +219,7 @@ function init() {
     replace: true
   });
 
-  window.___navigate = (to, options) => navigate(to, options); // Check for initial page-load redirect
-
-
-  maybeRedirect(window.location.pathname);
+  window.___navigate = (to, options) => navigate(to, options);
 }
 
 class RouteAnnouncer extends _react.default.Component {
