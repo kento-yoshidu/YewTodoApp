@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: cimg/node:lts
     branches:
-      only: master
+      only: circleci-project-setup
     steps:
       - checkout
       - run:
