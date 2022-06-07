@@ -1,7 +1,7 @@
 {
   "name": "learningelectron",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/main.js",
   "repository": "https://github.com/kento-yoshidu/CITest.git",
   "author": "kento <kento@toriwatari.bird>",
   "license": "MIT",
@@ -10,6 +10,7 @@
     "@types/node": "^17.0.40",
     "@types/react": "^18.0.12",
     "@types/react-dom": "^18.0.5",
+    "@types/webpack": "^5.28.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
     "electron": "^19.0.3",
@@ -26,5 +27,11 @@
   "dependencies": {
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
+  },
+  "scripts": {
+    "start": "run-s clean build serve",
+    "clean": "rimraf dist",
+    "build": "cross-env NODE_ENV=\"development\" webpack --progress",
+    "serve": "electron ."
   }
 }
